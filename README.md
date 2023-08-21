@@ -1,9 +1,9 @@
 # Visualize Nested Json with HyperTree & MitchTree
+### [JSON -> HyperTree (trial page)](https://ishihara-jp.github.io/VizNestJson/NestJsonViz.html)
+![](HyperTree.png)
 
-- [Viz by HyperTree](https://ishihara-jp.github.io/VizNestJson/NestJsonViz.html)
-  ![](HyperTree.png)
-- [Viz by MitchTree](https://ishihara-jp.github.io/VizNestJson/NestJsonViz2.html)
-  ![](MitchTree.png)
+### [JSON -> MitchTree (trial page)](https://ishihara-jp.github.io/VizNestJson/NestJsonViz2.html)
+![](MitchTree.png)
 
 You can visualize any nested json resource.
 If this page don't work, please check JavaScript settings.
