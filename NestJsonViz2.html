@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+    <title>Vizualize neted JSON with MitchTree</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/nested-json-viz.css">
+    <link rel="stylesheet" type="text/css" href="css/d3-mitch-tree.min.css">
+    <link rel="stylesheet" type="text/css" href="css/d3-mitch-tree-theme-default.min.css">
+    <script src="js/json-process.js"></script>
+    <script src="js/d3-mitch-tree.min.js"></script>
+    </head>
+    <body>
+        <input type="text" id="urlInput" placeholder="  Enter JSON URL  ">
+        <button onclick="fetchAndProcess()">Fetch and Display</button>
+        <div class="tate">
+            <div class="yoko">
+                <div id="right">
+                    JSON (raw)
+                    <pre id="textDisplay"></pre>
+                </div>
+                <div id="left">
+                    JSON (hierarchy form) 
+                    <pre id="textDisplay2"></pre>    
+                </div>
+            </div>
+            MitchTree view
+            <div id='viz'></div>
+        </div>
+    <script>
+        function fetchAndProcess() {
+            const urlInput = document.getElementById('urlInput').value;
+            const textDisplay = document.getElementById('textDisplay');
+            const textDisplay2 = document.getElementById('textDisplay2')
+
+            if (!urlInput) {
+                textDisplay.textContent = 'Please enter a valid URL.';
+                return;
+            }
+
+            fetch(urlInput)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(text => {
+                    try {
+                        const jsonData = JSON.parse(text);
+                        textDisplay.textContent = JSON.stringify(jsonData, null, 2);
+                        return jsonData; // Return parsed JSON for the next step
+                    } catch (error) {
+                        textDisplay.textContent = text;
+                        return null; // Return null if parsing fails
+                    }
+                })
+                .then(parsedData => {
+                    if (parsedData !== null) {
+                        // Process the parsed JSON data here
+                        const graph = convertJsonToGraph2(parsedData);
+                        textDisplay2.textContent = JSON.stringify(graph, null, 2);
+  
+                        var treePlugin = new d3.mitchTree.boxedTree()
+                            .setData(graph)
+                            .setAllowFocus(false)
+                            .setElement(document.getElementById("viz"))
+                            .setIdAccessor(function(data) {
+                                return data.id;
+                            })
+                            .setChildrenAccessor(function(data) {
+                                return data.children;
+                            })
+                            .setBodyDisplayTextAccessor(function(data) {
+                                return data.description;
+                            })
+                            .setTitleDisplayTextAccessor(function(data) {
+                                return data.name;
+                            })
+                            .initialize();
+
+                            // Expand all nodes
+                            var nodes = treePlugin.getNodes();
+                            nodes.forEach(function(node, index, arr) {
+                                treePlugin.expand(node);
+                            });
+                            treePlugin.update(treePlugin.getRoot());
+
+                        console.log('Parsed JSON data:', parsedData);
+                    } else {
+                        console.log('JSON parsing failed.');
+                    }
+                })
+                .catch(error => {
+                    textDisplay.textContent = 'Error: ' + error.message;
+                });
+        }    
+      </script>
+    </body>
+</html>

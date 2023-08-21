@@ -1,0 +1,35 @@
+html{  
+    height: 100%;
+}
+body{  
+    height: 100%;
+}
+.tate{
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    
+}
+.yoko{
+    display: flex;
+}
+
+#right, #left{
+    box-sizing:border-box;
+    width: 50%;
+}
+
+#textDisplay, #textDisplay2 {
+  max-height: 100px;
+  overflow: auto;
+  border: 1px solid #fff;
+  background-color:#eee;
+  padding: 10px;
+}
+
+#viz{
+    height: 100%;
+    background-color:#eee;
+}
