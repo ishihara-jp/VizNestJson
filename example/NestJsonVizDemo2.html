@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+    <title>Vizualize neted JSON with HyperTree Demo2</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../css/nested-json-viz.css">
+    <link rel="stylesheet" href="../css/d3-hypertree-light.css" id="ldswitch">        
+    <script src="../js/json-process.js"></script>
+    <script src="../js/d3-hypertree.js"></script>
+    </head>
+    <body>
+        <div class="tate">
+            <div class="yoko">
+                <div id="right">
+                    JSON (raw)
+                    <pre id="textDisplay"></pre>
+                </div>
+                <div id="left">
+                    JSON (hierarchy form) 
+                    <pre id="textDisplay2"></pre>    
+                </div>
+            </div>
+            HyperTree view
+            <div id='viz'></div>
+        </div>
+    <script>
+		const jsonFilePath = 'https://jami-fhir-jp-wg.github.io/jp-core-v1xpages/jpcore-r4/develop/DiagnosticReport-jp-diagnosticreport-microbiology-example-1.json';		
+        const textDisplay = document.getElementById('textDisplay');
+        const textDisplay2 = document.getElementById('textDisplay2')
+
+		window.onload = async function () {
+			try {
+				const response = await fetch(jsonFilePath);
+				if (!response.ok) {
+					throw new Error(`Failed to fetch JSON file (${response.status} ${response.statusText})`);
+				}
+				const data = await response.json();
+                textDisplay.textContent = JSON.stringify(data, null, 2);
+
+                const graph = convertJsonToGraph(data);
+                const hierarchy = createHierarchy(graph);
+                textDisplay2.textContent = JSON.stringify(hierarchy, null, 2);
+
+                const ht = new hyt.Hypertree(
+                    {
+                        parent: document.getElementById('viz')
+                    },
+                    {
+                        langInitBFS: (ht, n)=> n.precalc.label = n.data.name,
+                        dataloader: ok => ok(hierarchy),     
+                    }
+                )
+                ht.initPromise
+                    .then(()=> new Promise((ok, err)=> ht.animateUp(ok, err)))            
+                    .then(()=> ht.drawDetailFrame())
+				
+			} catch (error) {
+                textDisplay.textContent = 'Error: ' + error.message;
+
+			}
+		};
+      </script>
+    </body>
+</html>
