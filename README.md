@@ -1,4 +1,4 @@
-# Visualize Nested Json with HyperTree
+# Visualize Nested Json with HyperTree & MitchTree
 
 - [Viz by HyperTree](https://ishihara-jp.github.io/VizNestJson/NestJsonViz.html)
 - [Viz by MitchTree](https://ishihara-jp.github.io/VizNestJson/NestJsonViz2.html)
